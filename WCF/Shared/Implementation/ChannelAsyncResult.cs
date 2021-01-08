@@ -63,8 +63,6 @@
         // these get set during construction, so no need for much check
         public DependencyTelemetry Telemetry { get; private set; }
 
-        public IAsyncResult OriginalResult { get; protected set; }
-
         public static TAsyncResult End<TAsyncResult>(IAsyncResult result) where TAsyncResult : ChannelAsyncResult
         {
             var car = (ChannelAsyncResult)result;

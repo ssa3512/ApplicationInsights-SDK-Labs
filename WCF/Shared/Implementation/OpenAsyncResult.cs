@@ -11,10 +11,10 @@
         {
             this.InnerChannel = innerChannel;
 
-            this.OriginalResult = innerChannel.BeginOpen(timeout, OnComplete, this);
-            if (this.OriginalResult.CompletedSynchronously)
+            var originalResult = innerChannel.BeginOpen(timeout, OnComplete, this);
+            if (originalResult.CompletedSynchronously)
             {
-                innerChannel.EndOpen(this.OriginalResult);
+                innerChannel.EndOpen(originalResult);
                 this.CompleteSynchronously();
             }
         }
@@ -31,7 +31,7 @@
             var oar = (OpenAsyncResult)result.AsyncState;
             try
             {
-                oar.InnerChannel.EndOpen(oar.OriginalResult);
+                oar.InnerChannel.EndOpen(result);
                 oar.Complete(false);
             }
             catch (Exception ex)
