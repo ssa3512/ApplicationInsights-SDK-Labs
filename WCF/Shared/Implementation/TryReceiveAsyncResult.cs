@@ -10,11 +10,11 @@
         {
             this.InnerChannel = innerChannel;
 
-            this.OriginalResult = innerChannel.BeginTryReceive(timeout, OnComplete, this);
-            if (this.OriginalResult.CompletedSynchronously)
+            var originalResult = innerChannel.BeginTryReceive(timeout, OnComplete, this);
+            if (originalResult.CompletedSynchronously)
             {
                 Message message = null;
-                this.Result = innerChannel.EndTryReceive(this.OriginalResult, out message);
+                this.Result = innerChannel.EndTryReceive(originalResult, out message);
                 this.Message = message;
                 this.CompleteSynchronously();
             }
@@ -37,7 +37,7 @@
             try
             {
                 Message message = null;
-                trar.Result = trar.InnerChannel.EndTryReceive(trar.OriginalResult, out message);
+                trar.Result = trar.InnerChannel.EndTryReceive(result, out message);
                 trar.Message = message;
                 trar.Complete(false);
             }

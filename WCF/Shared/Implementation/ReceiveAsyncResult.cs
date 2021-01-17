@@ -10,10 +10,10 @@
         {
             this.InnerChannel = innerChannel;
 
-            this.OriginalResult = innerChannel.BeginReceive(timeout, OnComplete, this);
-            if (this.OriginalResult.CompletedSynchronously)
+            var originalResult = innerChannel.BeginReceive(timeout, OnComplete, this);
+            if (originalResult.CompletedSynchronously)
             {
-                this.Message = innerChannel.EndReceive(this.OriginalResult);
+                this.Message = innerChannel.EndReceive(originalResult);
                 this.CompleteSynchronously();
             }
         }
@@ -32,7 +32,7 @@
             var rar = (ReceiveAsyncResult)result.AsyncState;
             try
             {
-                rar.Message = rar.InnerChannel.EndReceive(rar.OriginalResult);
+                rar.Message = rar.InnerChannel.EndReceive(result);
                 rar.Complete(false);
             }
             catch (Exception ex)

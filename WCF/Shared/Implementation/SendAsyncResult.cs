@@ -13,10 +13,11 @@
             this.InnerChannel = innerChannel;
             this.RequestId = message.Headers.MessageId;
 
-            this.OriginalResult = innerChannel.BeginSend(message, timeout, OnComplete, this);
-            if (this.OriginalResult.CompletedSynchronously)
+            var originalResult = innerChannel.BeginSend(message, timeout, OnComplete, this);
+
+            if (originalResult.CompletedSynchronously)
             {
-                innerChannel.EndSend(this.OriginalResult);
+                innerChannel.EndSend(originalResult);
                 this.CompleteSynchronously();
             }
         }
@@ -33,9 +34,10 @@
             }
 
             var sar = (SendAsyncResult)result.AsyncState;
+
             try
             {
-                sar.InnerChannel.EndSend(sar.OriginalResult);
+                sar.InnerChannel.EndSend(result);
                 sar.Complete(false);
             }
             catch (Exception ex)
